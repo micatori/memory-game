@@ -1,0 +1,11 @@
+body {
+    min-height: 100vh;
+    margin: 50px;
+    padding: 50px;
+    background-color: rgb(30, 13, 46);
+}
+p {
+    font-size: 20px;
+    line-height: 24px;
+    color: rgb(136, 228, 51);
+}
