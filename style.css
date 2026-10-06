@@ -32,10 +32,22 @@ p {
 }
 .container {
     display: flex;
+    flex-direction: column;
 }
 .wait {
     pointer-events: none;
 }
+.wrapper-counter {
+    width: 50%;
+    border: 1px solid rgb(136, 228, 51);
+    border-radius: 10px;
+    margin: 10px 50px;
+}
+.counter {
+    padding: 5px 15px;
+    margin: 5px 5px;
+}
+
 .cards-wrapper {
     display: flex;
     flex-direction: row;

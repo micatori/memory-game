@@ -50,6 +50,7 @@ window.onload = function() {
     document.body.append(createHeader());
     document.body.append(createCardsField());
     const main = document.body.querySelector('.main');
+    createCounters();
     createCards();
     clickByCard();
 }
@@ -107,18 +108,33 @@ const createCards = () => {
     });
     container.append(cardsWrapper);
 }
+const createCounters = () => {
+    let container = document.body.querySelector('.container');
+    let wrapperMovesCounter = createEl('div', 'wrapper-counter');
+    let movesCounter = createEl('p', 'counter', 'moves-counter');
+    movesCounter.textContent = '0';
+    wrapperMovesCounter.append(movesCounter);
 
+    let wrapperCorrectPairsCounter = createEl('div', 'wrapper-counter');
+    let correctPairsCounter = createEl('p', 'counter', 'correct-pairs-counter');
+    correctPairsCounter.textContent = '0';
+    wrapperCorrectPairsCounter.append(correctPairsCounter);
+
+   container.append(wrapperMovesCounter, wrapperCorrectPairsCounter);
+}
 function clickByCard() {
     let firstCard = null;
     let secondCard = null;
     const cardContainer = document.querySelector('.cards-wrapper');
     cardContainer.addEventListener('click', function(event) {
         const card = event.target.closest('.card');
+        const movesCounter = document.getElementById('moves-counter');
+        const correctPairsCounter = document.getElementById('correct-pairs-counter');
+        // console.log(`movesCounter: ____ ${typeof movesCounter.textContent}`)
         if (!card) return;
         if (cardContainer.classList.contains('wait')) {
             return;
         }
-
         card.classList.toggle('flipped');
         card.classList.add('disabled');
         if (!firstCard) {
@@ -129,37 +145,36 @@ function clickByCard() {
             firstCard.classList.add('disabled');
         }
         if (firstCard && secondCard) {
+            let number = Number(movesCounter.textContent);
+            number += 1;
+            movesCounter.textContent = number;
+
             cardContainer.classList.add('wait');
             console.log(`firstCard: ${firstCard.id}`);
             console.log(`secondCard: ${secondCard.id}`);
             console.log(`firstCard: ${firstCard.dataset.name}`);
             console.log(`secondCard: ${secondCard.dataset.name}`);
             if (firstCard.dataset.name === secondCard.dataset.name) {
-                firstCard.classList.add('correct');
-                secondCard.classList.add('correct');
+                let number = Number(correctPairsCounter.textContent);
+                number += 1;
+                correctPairsCounter.textContent = number;
+
+                classListOpenCardsHandler([firstCard, secondCard], 'add', 'correct');
                 setTimeout(() => {
-                    const correctCards = cardContainer.querySelectorAll('.correct');
-                    correctCards.forEach((card) => {
-                        card.classList.remove('correct');
-                    })
+                    classListHandler('.correct', 'remove', 'correct');
                 }, 1100);
-                firstCard.classList.add('disabled');
-                secondCard.classList.add('disabled');
+                classListOpenCardsHandler([firstCard, secondCard], 'add', 'disabled');
                 firstCard = null;
                 secondCard = null;
                 cardContainer.classList.remove('wait');
             } else {
-                firstCard.classList.add('wrong');
-                secondCard.classList.add('wrong');
+                classListOpenCardsHandler([firstCard, secondCard], 'add', 'wrong');
                 setTimeout(() => {
-                    firstCard.classList.remove('wrong');
-                    secondCard.classList.remove('wrong');
+                    classListOpenCardsHandler([firstCard, secondCard], 'remove', 'wrong');
                 }, 1100);
                 setTimeout(() => {
-                    firstCard.classList.remove('flipped');
-                    secondCard.classList.remove('flipped');
-                    firstCard.classList.remove('disabled');
-                    secondCard.classList.remove('disabled');
+                    classListOpenCardsHandler([firstCard, secondCard], 'remove', 'flipped');
+                    classListOpenCardsHandler([firstCard, secondCard], 'remove', 'disabled');
                     firstCard = null;
                     secondCard = null;
                     cardContainer.classList.remove('wait');
@@ -168,5 +183,18 @@ function clickByCard() {
         }
     });
 }
+const classListHandler = (selector, action, classStr) => {
+    const cardContainer = document.querySelector('.cards-wrapper');
+    const correctCards = cardContainer.querySelectorAll(selector);
+    correctCards.forEach((card) => {
+        card.classList[action](classStr);
+    });
+};
+const classListOpenCardsHandler = ([first, second], metod, classStr) => {
+    first.classList[metod](classStr);
+    second.classList[metod](classStr);
+};
+
+
 
 
