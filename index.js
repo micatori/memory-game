@@ -212,6 +212,7 @@ const clickNewGame = (btn) => {
 const winGame = (num) => {
     document.body.classList.add('no-scroll');
     let modalOverlay = createEl('div', 'modal-overlay');
+    modalOverlay.setAttribute('tabindex', '-1');
     document.body.append(modalOverlay);
     let modal = createEl('div', 'modal');
     modalOverlay.append(modal);
@@ -238,6 +239,17 @@ const winGame = (num) => {
     clickNewGame(buttonNewGame);
     closeButton.addEventListener('click', function(event) {
         closeModalWindow(modalOverlay);
+    });
+    modalOverlay.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeModalWindow(modalOverlay);
+        }
+    });
+    modalOverlay.focus();
+    modalOverlay.addEventListener('click', function(event) {
+        if (event.target === modalOverlay) {
+            closeModalWindow(modalOverlay);
+        }
     });
 }
 const closeModalWindow = (modal) => {
