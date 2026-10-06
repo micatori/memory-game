@@ -11,6 +11,7 @@ p {
 }
 .header {
     display: flex;
+    margin-bottom: 15px;
 }
 .button {
     display: flex;
@@ -32,19 +33,24 @@ p {
 .container {
     display: flex;
 }
+.cards-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
 .card {
     display: block;
-    background-image: url('./images/cards/card_1.png');
     width: 100px;
     width: 100px;
+    margin: 10px 10px;
+    border: 1px solid rgb(136, 228, 51);
 }
 .card-front {
     display: block;
-    /* width: 100px;
-    width: 100px; */
+    background-color: rgb(51, 22, 78);;
 }
 .image-card {
     display: block;
-    width: 100px;
-    width: 100px;
+    width: 100%;
+    width: 100%;
 }

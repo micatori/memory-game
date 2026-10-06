@@ -1,5 +1,5 @@
 console.log('memory-game');
-const cards = [
+const uniqueCards = [
     {
         id: 1,
         name: "php",
@@ -42,12 +42,13 @@ const cards = [
         img: "./images/cards/card_8.png",
     },
 ];
-
+const cards = uniqueCards.concat(uniqueCards);
+console.log(cards.length);
 window.onload = function() {
     document.body.append(createHeader());
     document.body.append(createCardsField());
     const main = document.body.querySelector('.main');
-    main.append(createCards());
+    createCards();
 }
 const createEl = (element, className, id) => {
     let elem = document.createElement(element);
@@ -72,18 +73,24 @@ const createCardsField = () => {
 }
 
 const createCards = () => {
-    for (let i = 0; i < 8; i += 1) {
+    let container = document.body.querySelector('.container');
+    let cardsWrapper = createEl('div', 'cards-wrapper');
+
+    let shuffle = [...cards].sort(() => Math.random() - 0.5);
+
+    shuffle.forEach((cardData, i) => {
         let id = i + 1;
         let card = createEl('div', 'card');
         let cardFront = createEl('div', 'card-front', id);
         let img = createEl('img', 'image-card');
-        img.src = cards[i].img;
-        console.log(img.src);
-        img.alt = cards[i].name;
-        let container = document.body.querySelector('.container');
-        container.append(card);
-        card.append(cardFront);
+        img.src = cardData.img;
+        img.alt = cardData.name;
+
         cardFront.append(img);
-    }
+        card.append(cardFront);
+        cardsWrapper.append(card);
+    });
+    container.append(cardsWrapper);
 }
+
 
