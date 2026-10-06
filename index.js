@@ -53,6 +53,7 @@ window.onload = function() {
     createCounters();
     createCards();
     clickByCard();
+    clickNewGame();
 }
 
 
@@ -130,7 +131,6 @@ function clickByCard() {
         const card = event.target.closest('.card');
         const movesCounter = document.getElementById('moves-counter');
         const correctPairsCounter = document.getElementById('correct-pairs-counter');
-        // console.log(`movesCounter: ____ ${typeof movesCounter.textContent}`)
         if (!card) return;
         if (cardContainer.classList.contains('wait')) {
             return;
@@ -195,7 +195,13 @@ const countMoves = (nodeText) => {
     number += 1;
     nodeText.textContent = number;
 }
-
-
-
-
+const clickNewGame = () => {
+    let buttonNewGame = document.getElementById('button-new-game');
+    buttonNewGame.addEventListener('click', function(event) {
+        let container = document.body.querySelector('.container');
+        container.textContent = '';
+        createCounters();
+        createCards();
+        clickByCard();
+    });
+}
