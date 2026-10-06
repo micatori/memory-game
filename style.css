@@ -49,7 +49,17 @@ p {
     display: block;
     background-color: rgb(51, 22, 78);;
 }
+.card-back {
+    display: block;
+    background-color: rgb(51, 22, 78);
+}
+
 .image-card {
+    display: block;
+    width: 100%;
+    width: 100%;
+}
+.image-back {
     display: block;
     width: 100%;
     width: 100%;

@@ -44,12 +44,16 @@ const uniqueCards = [
 ];
 const cards = uniqueCards.concat(uniqueCards);
 console.log(cards.length);
+
+
 window.onload = function() {
     document.body.append(createHeader());
     document.body.append(createCardsField());
     const main = document.body.querySelector('.main');
     createCards();
 }
+
+
 const createEl = (element, className, id) => {
     let elem = document.createElement(element);
     elem.classList.add(className);
@@ -86,8 +90,16 @@ const createCards = () => {
         img.src = cardData.img;
         img.alt = cardData.name;
 
+        let idBack = `back-${id}`
+        let cardBack = createEl('div', 'card-back', idBack);
+        let imgBack = createEl('img', 'image-back');
+        imgBack.src = './images/card-back.png';
+        imgBack.alt = 'closed card';
+
+        cardBack.append(imgBack);
         cardFront.append(img);
         card.append(cardFront);
+        card.append(cardBack);
         cardsWrapper.append(card);
     });
     container.append(cardsWrapper);
