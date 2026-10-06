@@ -51,20 +51,13 @@ window.onload = function() {
     document.body.append(createCardsField());
     const main = document.body.querySelector('.main');
     createCards();
-    const cardContainer = document.querySelector('.cards-wrapper');
-    
-    cardContainer.addEventListener('click', function(event) {
-        const card = event.target.closest('.card');
-        if (!card) return;
-        console.log('click on the card: ', card );
-        card.classList.toggle('flipped');
-    })
+    clickByCard();
 }
 
 
 const createEl = (element, className, id) => {
     let elem = document.createElement(element);
-    elem.classList.add(className);
+    if (className) elem.classList.add(className);
     if (id) elem.setAttribute('id', id);
     return elem;
 }
@@ -83,7 +76,6 @@ const createCardsField = () => {
     main.append(container);
     return main;
 }
-
 const createCards = () => {
     let container = document.body.querySelector('.container');
     let cardsWrapper = createEl('div', 'cards-wrapper');
@@ -92,12 +84,13 @@ const createCards = () => {
 
     shuffle.forEach((cardData, i) => {
         let id = i + 1;
-        let card = createEl('div', 'card');
+        let card = createEl('div', 'card', id);
         let cardBox = createEl('div', 'card-box');
         let cardFront = createEl('div', 'card-front', id);
         let img = createEl('img', 'image-card');
         img.src = cardData.img;
         img.alt = cardData.name;
+        card.dataset.name = cardData.name;
 
         let idBack = `back-${id}`
         let cardBack = createEl('div', 'card-back', idBack);
@@ -115,5 +108,65 @@ const createCards = () => {
     container.append(cardsWrapper);
 }
 
+function clickByCard() {
+    let firstCard = null;
+    let secondCard = null;
+    const cardContainer = document.querySelector('.cards-wrapper');
+    cardContainer.addEventListener('click', function(event) {
+        const card = event.target.closest('.card');
+        if (!card) return;
+        if (cardContainer.classList.contains('wait')) {
+            return;
+        }
+
+        card.classList.toggle('flipped');
+        card.classList.add('disabled');
+        if (!firstCard) {
+            firstCard = card;
+            firstCard.classList.add('disabled');
+        } else {
+            secondCard = card;
+            firstCard.classList.add('disabled');
+        }
+        if (firstCard && secondCard) {
+            cardContainer.classList.add('wait');
+            console.log(`firstCard: ${firstCard.id}`);
+            console.log(`secondCard: ${secondCard.id}`);
+            console.log(`firstCard: ${firstCard.dataset.name}`);
+            console.log(`secondCard: ${secondCard.dataset.name}`);
+            if (firstCard.dataset.name === secondCard.dataset.name) {
+                firstCard.classList.add('correct');
+                secondCard.classList.add('correct');
+                setTimeout(() => {
+                    const correctCards = cardContainer.querySelectorAll('.correct');
+                    correctCards.forEach((card) => {
+                        card.classList.remove('correct');
+                    })
+                }, 1100);
+                firstCard.classList.add('disabled');
+                secondCard.classList.add('disabled');
+                firstCard = null;
+                secondCard = null;
+                cardContainer.classList.remove('wait');
+            } else {
+                firstCard.classList.add('wrong');
+                secondCard.classList.add('wrong');
+                setTimeout(() => {
+                    firstCard.classList.remove('wrong');
+                    secondCard.classList.remove('wrong');
+                }, 1100);
+                setTimeout(() => {
+                    firstCard.classList.remove('flipped');
+                    secondCard.classList.remove('flipped');
+                    firstCard.classList.remove('disabled');
+                    secondCard.classList.remove('disabled');
+                    firstCard = null;
+                    secondCard = null;
+                    cardContainer.classList.remove('wait');
+                }, 1201)
+            }
+        }
+    });
+}
 
 

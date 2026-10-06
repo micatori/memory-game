@@ -33,6 +33,9 @@ p {
 .container {
     display: flex;
 }
+.wait {
+    pointer-events: none;
+}
 .cards-wrapper {
     display: flex;
     flex-direction: row;
@@ -46,6 +49,18 @@ p {
     border: 1px solid rgb(136, 228, 51);
     perspective: 1000px;
     cursor: pointer;
+}
+.correct {
+    box-shadow: 0 0 10px rgb(136, 228, 51);
+}
+.wrong {
+    border: 1px solid rgb(228, 116, 51);
+    box-shadow: 0 0 10px rgb(228, 116, 51);
+}
+.card.disabled {
+    pointer-events: none;
+    opacity: 0.9;
+    cursor: default;
 }
 .card-box {
     /* display: block; */
