@@ -128,6 +128,9 @@ function clickByCard() {
     const cardContainer = document.querySelector('.cards-wrapper');
     cardContainer.addEventListener('click', function(event) {
         const card = event.target.closest('.card');
+        const movesCounter = document.getElementById('moves-counter');
+        const correctPairsCounter = document.getElementById('correct-pairs-counter');
+        // console.log(`movesCounter: ____ ${typeof movesCounter.textContent}`)
         if (!card) return;
         if (cardContainer.classList.contains('wait')) {
             return;
@@ -142,12 +145,20 @@ function clickByCard() {
             firstCard.classList.add('disabled');
         }
         if (firstCard && secondCard) {
+            let number = Number(movesCounter.textContent);
+            number += 1;
+            movesCounter.textContent = number;
+
             cardContainer.classList.add('wait');
             console.log(`firstCard: ${firstCard.id}`);
             console.log(`secondCard: ${secondCard.id}`);
             console.log(`firstCard: ${firstCard.dataset.name}`);
             console.log(`secondCard: ${secondCard.dataset.name}`);
             if (firstCard.dataset.name === secondCard.dataset.name) {
+                let number = Number(correctPairsCounter.textContent);
+                number += 1;
+                correctPairsCounter.textContent = number;
+
                 classListOpenCardsHandler([firstCard, secondCard], 'add', 'correct');
                 setTimeout(() => {
                     classListHandler('.correct', 'remove', 'correct');
