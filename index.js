@@ -119,7 +119,7 @@ const createCounters = () => {
 
     let wrapperCorrectPairsCounter = createEl('div', 'wrapper-counter');
     let correctPairsCounter = createEl('p', 'counter', 'correct-pairs-counter');
-    correctPairsCounter.textContent = '7';
+    correctPairsCounter.textContent = '0';
     wrapperCorrectPairsCounter.append(correctPairsCounter);
 
    container.append(wrapperMovesCounter, wrapperCorrectPairsCounter);
