@@ -53,7 +53,8 @@ window.onload = function() {
     createCounters();
     createCards();
     clickByCard();
-    clickNewGame();
+    const buttonNewGame = document.getElementById('button-new-game');
+    clickNewGame(buttonNewGame);
 }
 
 
@@ -154,7 +155,10 @@ function clickByCard() {
             console.log(`secondCard: ${secondCard.dataset.name}`);
             if (firstCard.dataset.name === secondCard.dataset.name) {
                 countMoves(correctPairsCounter);
-
+                if (correctPairsCounter.textContent === '8') {
+                    let countOfMoves = Number(movesCounter.textContent);
+                    winGame(countOfMoves);
+                }
                 classListOpenCardsHandler([firstCard, secondCard], 'add', 'correct');
                 setTimeout(() => {
                     classListHandler('.correct', 'remove', 'correct');
@@ -195,13 +199,42 @@ const countMoves = (nodeText) => {
     number += 1;
     nodeText.textContent = number;
 }
-const clickNewGame = () => {
-    let buttonNewGame = document.getElementById('button-new-game');
-    buttonNewGame.addEventListener('click', function(event) {
+const clickNewGame = (btn) => {
+    // let buttonNewGame = document.getElementById('button-new-game');
+    btn.addEventListener('click', function(event) {
         let container = document.body.querySelector('.container');
         container.textContent = '';
         createCounters();
         createCards();
         clickByCard();
     });
+}
+const winGame = (num) => {
+    document.body.classList.add('no-scroll');
+    let modalOverlay = createEl('div', 'modal-overlay');
+    document.body.append(modalOverlay);
+    let modal = createEl('div', 'modal');
+    modalOverlay.append(modal);
+    let congratulation = createEl('h3', 'counter');
+    congratulation.textContent = 'Win!';
+    modal.append(congratulation);
+
+    let wrapperMovesCounter = createEl('div', 'wrapper-counter');
+    let finalMovesCounter = createEl('p', 'counter');
+    finalMovesCounter.textContent = `Count of Moves: ${num}`;
+    wrapperMovesCounter.append(finalMovesCounter);
+    modal.append(wrapperMovesCounter);
+
+    let buttonNewGame = createEl('button', 'btn', 'new-game');
+    buttonNewGame.textContent = 'New Game';
+    modal.append(buttonNewGame);
+
+    let closeButton = createEl('button', 'btn', 'close');
+    closeButton.textContent = 'Close';
+    modal.append(closeButton);
+    buttonNewGame.addEventListener('click', function(event) {
+        document.body.classList.remove('no-scroll');
+        modalOverlay.remove();
+    });
+    clickNewGame(buttonNewGame);
 }
