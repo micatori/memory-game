@@ -119,7 +119,7 @@ const createCounters = () => {
 
     let wrapperCorrectPairsCounter = createEl('div', 'wrapper-counter');
     let correctPairsCounter = createEl('p', 'counter', 'correct-pairs-counter');
-    correctPairsCounter.textContent = '7';
+    correctPairsCounter.textContent = '0';
     wrapperCorrectPairsCounter.append(correctPairsCounter);
 
    container.append(wrapperMovesCounter, wrapperCorrectPairsCounter);
@@ -261,7 +261,7 @@ const closeModalWindow = (modal) => {
 }
 const formatDate = (date) => {
     let day = String(date.getDate()).padStart(2, '0');
-    let month = String(date.getMonth()).padStart(2, '0');
+    let month = String(date.getMonth() + 1).padStart(2, '0');
     let year = date.getFullYear();
     return `${day}.${month}.${year}`;
 }
