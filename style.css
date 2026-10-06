@@ -41,16 +41,48 @@ p {
 .card {
     display: block;
     width: 100px;
-    width: 100px;
+    height: 100px;
     margin: 10px 10px;
     border: 1px solid rgb(136, 228, 51);
+    perspective: 1000px;
+    cursor: pointer;
+}
+.card-box {
+    /* display: block; */
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
 }
 .card-front {
-    display: block;
-    background-color: rgb(51, 22, 78);;
+    background-color: rgb(76 25 123);
+    position:absolute;
+    top: 0;
+    left: 0;
+    backface-visibility: hidden;
+    transform: rotateY(180deg);
 }
+.card-back {
+    background-color: rgb(51, 22, 78);
+    position:absolute;
+    backface-visibility: hidden;
+    top: 0;
+    left: 0;
+    backface-visibility: hidden;
+    transform: rotateY(0);
+}
+
 .image-card {
     display: block;
     width: 100%;
+    height: 100%;
+}
+.image-back {
+    display: block;
     width: 100%;
+    height: 100%;
+}
+.card.flipped .card-box {
+    transform: rotateY(180deg);
 }
