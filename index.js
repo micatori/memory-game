@@ -233,8 +233,14 @@ const winGame = (num) => {
     closeButton.textContent = 'Close';
     modal.append(closeButton);
     buttonNewGame.addEventListener('click', function(event) {
-        document.body.classList.remove('no-scroll');
-        modalOverlay.remove();
+        closeModalWindow(modalOverlay);
     });
     clickNewGame(buttonNewGame);
+    closeButton.addEventListener('click', function(event) {
+        closeModalWindow(modalOverlay);
+    });
+}
+const closeModalWindow = (modal) => {
+    document.body.classList.remove('no-scroll');
+    modal.remove();
 }
