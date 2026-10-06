@@ -47,6 +47,11 @@ p {
     perspective: 1000px;
     cursor: pointer;
 }
+.card.disabled {
+    pointer-events: none;
+    opacity: 0.9;
+    cursor: default;
+}
 .card-box {
     /* display: block; */
     width: 100%;
