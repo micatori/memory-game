@@ -51,6 +51,14 @@ window.onload = function() {
     document.body.append(createCardsField());
     const main = document.body.querySelector('.main');
     createCards();
+    const cardContainer = document.querySelector('.cards-wrapper');
+    
+    cardContainer.addEventListener('click', function(event) {
+        const card = event.target.closest('.card');
+        if (!card) return;
+        console.log('click on the card: ', card );
+        card.classList.toggle('flipped');
+    })
 }
 
 
@@ -85,6 +93,7 @@ const createCards = () => {
     shuffle.forEach((cardData, i) => {
         let id = i + 1;
         let card = createEl('div', 'card');
+        let cardBox = createEl('div', 'card-box');
         let cardFront = createEl('div', 'card-front', id);
         let img = createEl('img', 'image-card');
         img.src = cardData.img;
@@ -98,11 +107,13 @@ const createCards = () => {
 
         cardBack.append(imgBack);
         cardFront.append(img);
-        card.append(cardFront);
-        card.append(cardBack);
+        card.append(cardBox);
+        cardBox.append(cardFront);
+        cardBox.append(cardBack);
         cardsWrapper.append(card);
     });
     container.append(cardsWrapper);
 }
+
 
 
