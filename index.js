@@ -50,6 +50,7 @@ window.onload = function() {
     document.body.append(createHeader());
     document.body.append(createCardsField());
     const main = document.body.querySelector('.main');
+    createCounters();
     createCards();
     clickByCard();
 }
@@ -107,7 +108,20 @@ const createCards = () => {
     });
     container.append(cardsWrapper);
 }
+const createCounters = () => {
+    let container = document.body.querySelector('.container');
+    let wrapperMovesCounter = createEl('div', 'wrapper-counter');
+    let movesCounter = createEl('p', 'counter', 'moves-counter');
+    movesCounter.textContent = '0';
+    wrapperMovesCounter.append(movesCounter);
 
+    let wrapperCorrectPairsCounter = createEl('div', 'wrapper-counter');
+    let correctPairsCounter = createEl('p', 'counter', 'correct-pairs-counter');
+    correctPairsCounter.textContent = '0';
+    wrapperCorrectPairsCounter.append(correctPairsCounter);
+
+   container.append(wrapperMovesCounter, wrapperCorrectPairsCounter);
+}
 function clickByCard() {
     let firstCard = null;
     let secondCard = null;
@@ -168,8 +182,8 @@ const classListHandler = (selector, action, classStr) => {
 const classListOpenCardsHandler = ([first, second], metod, classStr) => {
     first.classList[metod](classStr);
     second.classList[metod](classStr);
-}
-// classListOpenCardsHandler([firstCard, secondCard], metod, classStr)
+};
+
 
 
 
