@@ -115,28 +115,46 @@ function clickByCard() {
     cardContainer.addEventListener('click', function(event) {
         const card = event.target.closest('.card');
         if (!card) return;
-        console.log('click on the card: ');
-        card.classList.toggle('flipped');
-        setTimeout(() => {
-            card.classList.add('disabled');
-        }, 850);
+        if (cardContainer.classList.contains('wait')) {
+            return;
+        }
 
+        card.classList.toggle('flipped');
+        card.classList.add('disabled');
         if (!firstCard) {
             firstCard = card;
+            firstCard.classList.add('disabled');
         } else {
             secondCard = card;
+            firstCard.classList.add('disabled');
         }
         if (firstCard && secondCard) {
+            cardContainer.classList.add('wait');
             console.log(`firstCard: ${firstCard.id}`);
             console.log(`secondCard: ${secondCard.id}`);
             console.log(`firstCard: ${firstCard.dataset.name}`);
             console.log(`secondCard: ${secondCard.dataset.name}`);
             if (firstCard.dataset.name === secondCard.dataset.name) {
+                firstCard.classList.add('correct');
+                secondCard.classList.add('correct');
+                setTimeout(() => {
+                    const correctCards = cardContainer.querySelectorAll('.correct');
+                    correctCards.forEach((card) => {
+                        card.classList.remove('correct');
+                    })
+                }, 1100);
                 firstCard.classList.add('disabled');
                 secondCard.classList.add('disabled');
                 firstCard = null;
                 secondCard = null;
+                cardContainer.classList.remove('wait');
             } else {
+                firstCard.classList.add('wrong');
+                secondCard.classList.add('wrong');
+                setTimeout(() => {
+                    firstCard.classList.remove('wrong');
+                    secondCard.classList.remove('wrong');
+                }, 1100);
                 setTimeout(() => {
                     firstCard.classList.remove('flipped');
                     secondCard.classList.remove('flipped');
@@ -144,7 +162,8 @@ function clickByCard() {
                     secondCard.classList.remove('disabled');
                     firstCard = null;
                     secondCard = null;
-                }, 1500)
+                    cardContainer.classList.remove('wait');
+                }, 1201)
             }
         }
     });
