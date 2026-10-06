@@ -119,7 +119,7 @@ const createCounters = () => {
 
     let wrapperCorrectPairsCounter = createEl('div', 'wrapper-counter');
     let correctPairsCounter = createEl('p', 'counter', 'correct-pairs-counter');
-    correctPairsCounter.textContent = '0';
+    correctPairsCounter.textContent = '7';
     wrapperCorrectPairsCounter.append(correctPairsCounter);
 
    container.append(wrapperMovesCounter, wrapperCorrectPairsCounter);
@@ -157,6 +157,9 @@ function clickByCard() {
                 countMoves(correctPairsCounter);
                 if (correctPairsCounter.textContent === '8') {
                     let countOfMoves = Number(movesCounter.textContent);
+                    let newDate = new Date();
+                    let date = formatDate(newDate);
+                    console.log(date);
                     winGame(countOfMoves);
                 }
                 classListOpenCardsHandler([firstCard, secondCard], 'add', 'correct');
@@ -255,4 +258,10 @@ const winGame = (num) => {
 const closeModalWindow = (modal) => {
     document.body.classList.remove('no-scroll');
     modal.remove();
+}
+const formatDate = (date) => {
+    let day = String(date.getDate()).padStart(2, '0');
+    let month = String(date.getMonth()).padStart(2, '0');
+    let year = date.getFullYear();
+    return `${day}.${month}.${year}`;
 }
