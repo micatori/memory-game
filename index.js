@@ -145,9 +145,7 @@ function clickByCard() {
             firstCard.classList.add('disabled');
         }
         if (firstCard && secondCard) {
-            let number = Number(movesCounter.textContent);
-            number += 1;
-            movesCounter.textContent = number;
+            countMoves(movesCounter);
 
             cardContainer.classList.add('wait');
             console.log(`firstCard: ${firstCard.id}`);
@@ -155,9 +153,7 @@ function clickByCard() {
             console.log(`firstCard: ${firstCard.dataset.name}`);
             console.log(`secondCard: ${secondCard.dataset.name}`);
             if (firstCard.dataset.name === secondCard.dataset.name) {
-                let number = Number(correctPairsCounter.textContent);
-                number += 1;
-                correctPairsCounter.textContent = number;
+                countMoves(correctPairsCounter);
 
                 classListOpenCardsHandler([firstCard, secondCard], 'add', 'correct');
                 setTimeout(() => {
@@ -194,6 +190,11 @@ const classListOpenCardsHandler = ([first, second], metod, classStr) => {
     first.classList[metod](classStr);
     second.classList[metod](classStr);
 };
+const countMoves = (nodeText) => {
+    let number = Number(nodeText.textContent);
+    number += 1;
+    nodeText.textContent = number;
+}
 
 
 
