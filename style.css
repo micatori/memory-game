@@ -11,9 +11,46 @@ p {
 }
 .header {
     display: flex;
+    margin-bottom: 15px;
 }
 .button {
     display: flex;
     margin: 5px 10px;
     padding: 5px 10px;
+    border: 1px solid rgb(207, 51, 228);
+    border-radius: 5px;
+    color: rgb(30, 13, 46);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.button:hover {
+    background-color: rgb(207, 51, 228);
+    transition: all 0.3s;
+}
+.main {
+    display: flex;
+}
+.container {
+    display: flex;
+}
+.cards-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.card {
+    display: block;
+    width: 100px;
+    width: 100px;
+    margin: 10px 10px;
+    border: 1px solid rgb(136, 228, 51);
+}
+.card-front {
+    display: block;
+    background-color: rgb(51, 22, 78);;
+}
+.image-card {
+    display: block;
+    width: 100%;
+    width: 100%;
 }
