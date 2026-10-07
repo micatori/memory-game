@@ -1,0 +1,331 @@
+console.log('memory-game');
+const uniqueCards = [
+    {
+        id: 1,
+        name: "php",
+        img: "./images/cards/card_1.png",
+    },
+    {
+        id: 2,
+        name: "css3",
+        img: "./images/cards/card_2.png",
+    },
+    {
+        id: 3,
+        name: "html5",
+        img: "./images/cards/card_3.png"
+    },
+    {
+        id: 4,
+        name: "jquery",
+        img: "./images/cards/card_4.png",
+    },
+    {
+        id: 5,
+        name: "javascript",
+        img: "./images/cards/card_5.png",
+
+    },
+    {
+        id: 6,
+        name: "node",
+        img: "./images/cards/card_6.png",
+    },
+    {
+        id: 7,
+        name: "python",
+        img: "./images/cards/card_7.png",
+    },
+    {
+        id: 8,
+        name: "sass",
+        img: "./images/cards/card_8.png",
+    },
+];
+const cards = uniqueCards.concat(uniqueCards);
+
+window.onload = function() {
+    document.body.append(createHeader());
+    document.body.append(createCardsField());
+    const main = document.body.querySelector('.main');
+    createCounters();
+    createCards();
+    clickByCard();
+    const buttonNewGame = document.getElementById('button-new-game');
+    clickNewGame(buttonNewGame);
+    let buttonLeaderBoard = document.getElementById('button-leader-board');
+    buttonLeaderBoard.addEventListener('click', function(event) {
+        modalLeaderWindow();
+    });
+}
+
+
+const createEl = (element, className, id) => {
+    let elem = document.createElement(element);
+    if (className) elem.classList.add(className);
+    if (id) elem.setAttribute('id', id);
+    return elem;
+}
+const createHeader = () => {
+    let header = createEl('header', 'header');
+    let buttonNewGame = createEl('button', 'button', 'button-new-game');
+    buttonNewGame.textContent = 'New Game';
+    let buttonLeaderBoard = createEl('button', 'button', 'button-leader-board');
+    buttonLeaderBoard.textContent = 'LeaderBoard';
+    header.append(buttonNewGame, buttonLeaderBoard);
+    return header;
+}
+const createCardsField = () => {
+    let main = createEl('main', 'main');
+    let container = createEl('div', 'container');
+    main.append(container);
+    return main;
+}
+const createCards = () => {
+    let container = document.body.querySelector('.container');
+    let cardsWrapper = createEl('div', 'cards-wrapper');
+
+    let shuffle = [...cards].sort(() => Math.random() - 0.5);
+
+    shuffle.forEach((cardData, i) => {
+        let id = i + 1;
+        let card = createEl('div', 'card', id);
+        let cardBox = createEl('div', 'card-box');
+        let cardFront = createEl('div', 'card-front', id);
+        let img = createEl('img', 'image-card');
+        img.src = cardData.img;
+        img.alt = cardData.name;
+        card.dataset.name = cardData.name;
+
+        let idBack = `back-${id}`
+        let cardBack = createEl('div', 'card-back', idBack);
+        let imgBack = createEl('img', 'image-back');
+        imgBack.src = './images/card-back.png';
+        imgBack.alt = 'closed card';
+
+        cardBack.append(imgBack);
+        cardFront.append(img);
+        card.append(cardBox);
+        cardBox.append(cardFront);
+        cardBox.append(cardBack);
+        cardsWrapper.append(card);
+    });
+    container.append(cardsWrapper);
+}
+const createCounters = () => {
+    let container = document.body.querySelector('.container');
+    let wrapperMovesCounter = createEl('div', 'wrapper-counter');
+    let movesCounter = createEl('p', 'counter', 'moves-counter');
+    movesCounter.textContent = '0';
+    wrapperMovesCounter.append(movesCounter);
+
+    let wrapperCorrectPairsCounter = createEl('div', 'wrapper-counter');
+    let correctPairsCounter = createEl('p', 'counter', 'correct-pairs-counter');
+    correctPairsCounter.textContent = '0';
+    wrapperCorrectPairsCounter.append(correctPairsCounter);
+
+   container.append(wrapperMovesCounter, wrapperCorrectPairsCounter);
+}
+let arrayOfGames = JSON.parse(localStorage.getItem('arrayOfGames')) || [];
+function clickByCard() {
+    let firstCard = null;
+    let secondCard = null;
+    const cardContainer = document.querySelector('.cards-wrapper');
+    cardContainer.addEventListener('click', function(event) {
+        const card = event.target.closest('.card');
+        const movesCounter = document.getElementById('moves-counter');
+        const correctPairsCounter = document.getElementById('correct-pairs-counter');
+        if (!card) return;
+        if (cardContainer.classList.contains('wait')) {
+            return;
+        }
+        card.classList.toggle('flipped');
+        card.classList.add('disabled');
+        if (!firstCard) {
+            firstCard = card;
+            firstCard.classList.add('disabled');
+        } else {
+            secondCard = card;
+            firstCard.classList.add('disabled');
+        }
+        if (firstCard && secondCard) {
+            countMoves(movesCounter);
+
+            cardContainer.classList.add('wait');
+            if (firstCard.dataset.name === secondCard.dataset.name) {
+                countMoves(correctPairsCounter);
+                if (correctPairsCounter.textContent === '8') {
+                    let countOfMoves = Number(movesCounter.textContent);
+                    let newDate = new Date();
+                    let date = formatDate(newDate);
+                    const gameResult = {
+                        date: date,
+                        moves: countOfMoves,
+                    }
+                    arrayOfGames = JSON.parse(localStorage.getItem('arrayOfGames')) || [];
+                    arrayOfGames.unshift(gameResult);
+                    arrayOfGames.sort((a, b) => Number(a.moves) - Number(b.moves));
+                    arrayOfGames = arrayOfGames.slice(0, 10);
+                    localStorage.setItem('arrayOfGames', JSON.stringify(arrayOfGames));
+
+                    winGame(countOfMoves);
+                }
+                classListOpenCardsHandler([firstCard, secondCard], 'add', 'correct');
+                setTimeout(() => {
+                    classListHandler('.correct', 'remove', 'correct');
+                }, 1100);
+                classListOpenCardsHandler([firstCard, secondCard], 'add', 'disabled');
+                firstCard = null;
+                secondCard = null;
+                cardContainer.classList.remove('wait');
+            } else {
+                classListOpenCardsHandler([firstCard, secondCard], 'add', 'wrong');
+                setTimeout(() => {
+                    classListOpenCardsHandler([firstCard, secondCard], 'remove', 'wrong');
+                }, 1100);
+                setTimeout(() => {
+                    classListOpenCardsHandler([firstCard, secondCard], 'remove', 'flipped');
+                    classListOpenCardsHandler([firstCard, secondCard], 'remove', 'disabled');
+                    firstCard = null;
+                    secondCard = null;
+                    cardContainer.classList.remove('wait');
+                }, 1201)
+            }
+        }
+    });
+}
+const classListHandler = (selector, action, classStr) => {
+    const cardContainer = document.querySelector('.cards-wrapper');
+    const correctCards = cardContainer.querySelectorAll(selector);
+    correctCards.forEach((card) => {
+        card.classList[action](classStr);
+    });
+};
+const classListOpenCardsHandler = ([first, second], metod, classStr) => {
+    first.classList[metod](classStr);
+    second.classList[metod](classStr);
+};
+const countMoves = (nodeText) => {
+    let number = Number(nodeText.textContent);
+    number += 1;
+    nodeText.textContent = number;
+}
+const clickNewGame = (btn) => {
+    // let buttonNewGame = document.getElementById('button-new-game');
+    btn.addEventListener('click', function(event) {
+        let container = document.body.querySelector('.container');
+        container.textContent = '';
+        createCounters();
+        createCards();
+        clickByCard();
+    });
+}
+const createModalWindow = () => {
+    document.body.classList.add('no-scroll');
+    let modalOverlay = createEl('div', 'modal-overlay');
+    modalOverlay.setAttribute('tabindex', '-1');
+    document.body.append(modalOverlay);
+    let modal = createEl('div', 'modal');
+    modalOverlay.append(modal);
+    let closeButton = createCloseButton();
+    modal.append(closeButton);
+    return modalOverlay;
+}
+const createCloseButton = () => {
+    let closeButton = createEl('button', 'btn', 'close');
+    closeButton.textContent = 'Close';
+    return closeButton;
+}
+const winGame = (num) => {
+    let modalOverlay = createModalWindow();
+    let modal = document.querySelector('.modal');
+    let congratulation = createEl('h3', 'counter');
+    congratulation.textContent = 'Win!';
+    modal.append(congratulation);
+
+    let wrapperMovesCounter = createEl('div', 'wrapper-counter');
+    let finalMovesCounter = createEl('p', 'counter');
+    finalMovesCounter.textContent = `Count of Moves: ${num}`;
+    wrapperMovesCounter.append(finalMovesCounter);
+    modal.append(wrapperMovesCounter);
+
+    let buttonNewGame = createEl('button', 'btn', 'new-game');
+    buttonNewGame.textContent = 'New Game';
+    modal.append(buttonNewGame);
+
+    let closeButton = document.getElementById('close');
+    buttonNewGame.addEventListener('click', function(event) {
+        closeModalWindow(modalOverlay);
+    });
+    clickNewGame(buttonNewGame);
+    closeModalWindowByEvent(closeButton, modalOverlay);
+    modalOverlay.focus();
+}
+
+const closeModalWindow = (modal) => {
+    document.body.classList.remove('no-scroll');
+    modal.remove();
+}
+const closeModalWindowByEvent = (btn, over) => {
+    btn.addEventListener('click', function(event) {
+        closeModalWindow(over);
+    });
+    over.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeModalWindow(over);
+        }
+    });
+    over.focus();
+    over.addEventListener('click', function(event) {
+        if (event.target === over) {
+            closeModalWindow(over);
+        }
+    });
+}
+const formatDate = (date) => {
+    let day = String(date.getDate()).padStart(2, '0');
+    let month = String(date.getMonth() + 1).padStart(2, '0');
+    let year = date.getFullYear();
+    return `${day}.${month}.${year}`;
+}
+const modalLeaderWindow = () => {
+    let modalOverlay = createModalWindow();
+    let modal = document.querySelector('.modal');
+    modal.id = 'modal-leader-board';
+    let closeButton = document.getElementById('close');
+    closeModalWindowByEvent(closeButton, modalOverlay);
+    modalOverlay.focus();
+    if (arrayOfGames.length === 0) {
+        let notice = createEl('p');
+        notice.textContent = 'No results yet';
+        modal.append(notice);
+    } else {
+        const table = createEl('table', 'table');
+        const thead = createEl('thead');
+        const headerRow = createEl('tr');
+        let arrHeaders = ['#', 'Moves', 'Date'];
+        arrHeaders.forEach((text) => {
+            const th = createEl('th');
+            th.textContent = text;
+            headerRow.append(th);
+        });
+        thead.append(headerRow);
+
+        const tbody = createEl('tbody');
+
+        arrayOfGames.forEach((game, index) => {
+            const row = createEl('tr');
+            const tdIndex = createEl('td');
+            tdIndex.textContent = String(index + 1);
+            const tdMoves = createEl('td');
+            tdMoves.textContent = game.moves;
+            const tdDate = createEl('td');
+            tdDate.textContent = game.date;
+            row.append(tdIndex, tdMoves, tdDate);
+            tbody.append(row);
+        })
+        table.append(thead, tbody);
+        modal.append(table);
+    }
+
+}

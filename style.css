@@ -1,0 +1,169 @@
+body {
+    min-height: 100vh;
+    margin: 30px;
+    padding: 30px;
+    background-color: rgb(30, 13, 46);
+}
+p {
+    font-size: 20px;
+    line-height: 24px;
+    color: rgb(136, 228, 51);
+}
+h3 {
+    align-self: center;
+    font-size: 24px;
+    line-height: 30px;
+    color: rgb(136, 228, 51);
+}
+.header {
+    display: flex;
+    margin-bottom: 15px;
+}
+.button, .btn {
+    display: flex;
+    margin: 5px 10px;
+    padding: 5px 10px;
+    border: 1px solid rgb(136, 228, 51);
+    border-radius: 5px;
+    color: rgb(30, 13, 46);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.btn {
+    font-size: 20px;
+    line-height: 24px;
+    color: rgb(136, 228, 51);
+    background-color: rgb(30, 13, 46);
+}
+.button:hover, .btn:hover {
+    border: 1px solid rgb(207, 51, 228);
+    background-color: rgb(207, 51, 228);
+    transition: all 0.3s;
+}
+.main {
+    display: flex;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+}
+.wait {
+    pointer-events: none;
+}
+.wrapper-counter {
+    width: 50%;
+    border: 1px solid rgb(136, 228, 51);
+    border-radius: 10px;
+    margin: 10px 50px;
+}
+.counter {
+    padding: 5px 15px;
+    margin: 5px 5px;
+}
+
+.cards-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.card {
+    display: block;
+    width: 100px;
+    height: 100px;
+    margin: 10px 10px;
+    border: 1px solid rgb(136, 228, 51);
+    perspective: 1000px;
+    cursor: pointer;
+}
+.correct {
+    box-shadow: 0 0 10px rgb(136, 228, 51);
+}
+.wrong {
+    border: 1px solid rgb(228, 116, 51);
+    box-shadow: 0 0 10px rgb(228, 116, 51);
+}
+.card.disabled {
+    pointer-events: none;
+    opacity: 0.9;
+    cursor: default;
+}
+.card-box {
+    /* display: block; */
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+}
+.card-front {
+    background-color: rgb(76 25 123);
+    position:absolute;
+    top: 0;
+    left: 0;
+    backface-visibility: hidden;
+    transform: rotateY(180deg);
+}
+.card-back {
+    background-color: rgb(51, 22, 78);
+    position:absolute;
+    backface-visibility: hidden;
+    top: 0;
+    left: 0;
+    backface-visibility: hidden;
+    transform: rotateY(0);
+}
+
+.image-card {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.image-back {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.card.flipped .card-box {
+    transform: rotateY(180deg);
+}
+
+/* MODAL */
+.modal-overlay {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color:  rgba(85, 82, 76, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 900;
+}
+.modal {
+    display: flex;
+    flex-direction: column-reverse;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    max-width: 500px;
+    max-height: 300px;
+    border: 1px solid rgb(136, 228, 51);
+    background-color: rgb(58, 55, 51);
+    padding: 16px;
+    border-radius: 20px;
+    /* ? */
+    transition: transform 0.3s ease;
+}
+.modal-hidden {
+    display: none;
+}
+.no-scroll {
+    overflow: hidden;
+}
+#modal-leader-board {
+    min-width: 400px;
+    min-height: 400px;
+}
