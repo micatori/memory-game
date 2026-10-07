@@ -43,8 +43,6 @@ const uniqueCards = [
     },
 ];
 const cards = uniqueCards.concat(uniqueCards);
-console.log(cards.length);
-
 
 window.onload = function() {
     document.body.append(createHeader());
@@ -123,11 +121,12 @@ const createCounters = () => {
 
     let wrapperCorrectPairsCounter = createEl('div', 'wrapper-counter');
     let correctPairsCounter = createEl('p', 'counter', 'correct-pairs-counter');
-    correctPairsCounter.textContent = '7';
+    correctPairsCounter.textContent = '0';
     wrapperCorrectPairsCounter.append(correctPairsCounter);
 
    container.append(wrapperMovesCounter, wrapperCorrectPairsCounter);
 }
+let arrayOfGames = JSON.parse(localStorage.getItem('arrayOfGames')) || [];
 function clickByCard() {
     let firstCard = null;
     let secondCard = null;
@@ -167,7 +166,7 @@ function clickByCard() {
                         date: date,
                         moves: countOfMoves,
                     }
-                    let arrayOfGames = JSON.parse(localStorage.getItem('arrayOfGames')) || [];
+                    arrayOfGames = JSON.parse(localStorage.getItem('arrayOfGames')) || [];
                     arrayOfGames.unshift(gameResult);
                     arrayOfGames.sort((a, b) => Number(a.moves) - Number(b.moves));
                     arrayOfGames = arrayOfGames.slice(0, 10);
@@ -296,8 +295,36 @@ const formatDate = (date) => {
 const modalLeaderWindow = () => {
     let modalOverlay = createModalWindow();
     let modal = document.querySelector('.modal');
+    modal.id = 'modal-leader-board';
     let closeButton = document.getElementById('close');
     closeModalWindowByEvent(closeButton, modalOverlay);
     modalOverlay.focus();
-    
+
+    const table = createEl('table', 'table');
+    const thead = createEl('thead');
+    const headerRow = createEl('tr');
+    let arrHeaders = ['#', 'Moves', 'Date'];
+    arrHeaders.forEach((text) => {
+        const th = createEl('th');
+        th.textContent = text;
+        headerRow.append(th);
+    });
+    thead.append(headerRow);
+
+    const tbody = createEl('tbody');
+    console.log(arrayOfGames);
+    console.log(Array.isArray(arrayOfGames));
+    arrayOfGames.forEach((game, index) => {
+        const row = createEl('tr');
+        const tdIndex = createEl('td');
+        tdIndex.textContent = String(index + 1);
+        const tdMoves = createEl('td');
+        tdMoves.textContent = game.moves;
+        const tdDate = createEl('td');
+        tdDate.textContent = game.date;
+        row.append(tdIndex, tdMoves, tdDate);
+        tbody.append(row);
+    })
+    table.append(thead, tbody);
+    modal.append(table);
 }

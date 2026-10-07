@@ -163,3 +163,7 @@ h3 {
 .no-scroll {
     overflow: hidden;
 }
+#modal-leader-board {
+    min-width: 400px;
+    min-height: 400px;
+}
