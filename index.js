@@ -55,6 +55,10 @@ window.onload = function() {
     clickByCard();
     const buttonNewGame = document.getElementById('button-new-game');
     clickNewGame(buttonNewGame);
+    let buttonLeaderBoard = document.getElementById('button-leader-board');
+    buttonLeaderBoard.addEventListener('click', function(event) {
+        modalLeaderWindow();
+    });
 }
 
 
@@ -119,7 +123,7 @@ const createCounters = () => {
 
     let wrapperCorrectPairsCounter = createEl('div', 'wrapper-counter');
     let correctPairsCounter = createEl('p', 'counter', 'correct-pairs-counter');
-    correctPairsCounter.textContent = '0';
+    correctPairsCounter.textContent = '7';
     wrapperCorrectPairsCounter.append(correctPairsCounter);
 
    container.append(wrapperMovesCounter, wrapperCorrectPairsCounter);
@@ -159,7 +163,16 @@ function clickByCard() {
                     let countOfMoves = Number(movesCounter.textContent);
                     let newDate = new Date();
                     let date = formatDate(newDate);
-                    console.log(date);
+                    const gameResult = {
+                        date: date,
+                        moves: countOfMoves,
+                    }
+                    let arrayOfGames = JSON.parse(localStorage.getItem('arrayOfGames')) || [];
+                    arrayOfGames.unshift(gameResult);
+                    arrayOfGames.sort((a, b) => Number(a.moves) - Number(b.moves));
+                    arrayOfGames = arrayOfGames.slice(0, 10);
+                    localStorage.setItem('arrayOfGames', JSON.stringify(arrayOfGames));
+
                     winGame(countOfMoves);
                 }
                 classListOpenCardsHandler([firstCard, secondCard], 'add', 'correct');
@@ -212,13 +225,25 @@ const clickNewGame = (btn) => {
         clickByCard();
     });
 }
-const winGame = (num) => {
+const createModalWindow = () => {
     document.body.classList.add('no-scroll');
     let modalOverlay = createEl('div', 'modal-overlay');
     modalOverlay.setAttribute('tabindex', '-1');
     document.body.append(modalOverlay);
     let modal = createEl('div', 'modal');
     modalOverlay.append(modal);
+    let closeButton = createCloseButton();
+    modal.append(closeButton);
+    return modalOverlay;
+}
+const createCloseButton = () => {
+    let closeButton = createEl('button', 'btn', 'close');
+    closeButton.textContent = 'Close';
+    return closeButton;
+}
+const winGame = (num) => {
+    let modalOverlay = createModalWindow();
+    let modal = document.querySelector('.modal');
     let congratulation = createEl('h3', 'counter');
     congratulation.textContent = 'Win!';
     modal.append(congratulation);
@@ -233,35 +258,46 @@ const winGame = (num) => {
     buttonNewGame.textContent = 'New Game';
     modal.append(buttonNewGame);
 
-    let closeButton = createEl('button', 'btn', 'close');
-    closeButton.textContent = 'Close';
-    modal.append(closeButton);
+    let closeButton = document.getElementById('close');
     buttonNewGame.addEventListener('click', function(event) {
         closeModalWindow(modalOverlay);
     });
     clickNewGame(buttonNewGame);
-    closeButton.addEventListener('click', function(event) {
-        closeModalWindow(modalOverlay);
-    });
-    modalOverlay.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape') {
-            closeModalWindow(modalOverlay);
-        }
-    });
+    closeModalWindowByEvent(closeButton, modalOverlay);
     modalOverlay.focus();
-    modalOverlay.addEventListener('click', function(event) {
-        if (event.target === modalOverlay) {
-            closeModalWindow(modalOverlay);
-        }
-    });
 }
+
 const closeModalWindow = (modal) => {
     document.body.classList.remove('no-scroll');
     modal.remove();
+}
+const closeModalWindowByEvent = (btn, over) => {
+    btn.addEventListener('click', function(event) {
+        closeModalWindow(over);
+    });
+    over.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeModalWindow(over);
+        }
+    });
+    over.focus();
+    over.addEventListener('click', function(event) {
+        if (event.target === over) {
+            closeModalWindow(over);
+        }
+    });
 }
 const formatDate = (date) => {
     let day = String(date.getDate()).padStart(2, '0');
     let month = String(date.getMonth() + 1).padStart(2, '0');
     let year = date.getFullYear();
     return `${day}.${month}.${year}`;
+}
+const modalLeaderWindow = () => {
+    let modalOverlay = createModalWindow();
+    let modal = document.querySelector('.modal');
+    let closeButton = document.getElementById('close');
+    closeModalWindowByEvent(closeButton, modalOverlay);
+    modalOverlay.focus();
+    
 }
